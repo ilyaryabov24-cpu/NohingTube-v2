@@ -1,5 +1,10 @@
 {
-  "users": {},
+  "users": {
+    "v": {
+      "password": "v",
+      "subscribers": []
+    }
+  },
   "videos": [
     {
       "id": "welcome",
