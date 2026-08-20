@@ -15,8 +15,10 @@
       "title": "Добро пожаловать в NothingTube 🎛️",
       "author": "ilyaryabov24-cpu",
       "filePath": "https://raw.githubusercontent.com/ilyaryabov24-cpu/NohingTube-v2/main/videos/demo-video.mp4",
-      "likes": 0,
-      "likesBy": [],
+      "likes": 1,
+      "likesBy": [
+        "Nothing"
+      ],
       "date": "2026-08-20T07:00:00Z"
     }
   ]
