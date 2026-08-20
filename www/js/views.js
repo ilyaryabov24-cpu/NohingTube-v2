@@ -62,9 +62,6 @@ const Views = (() => {
             <span class="btn-label">Войти / Зарегистрироваться</span>
           </button>
           <p class="auth-hint">Нет аккаунта? Он создастся автоматически при первом входе.</p>
-          ${CONFIG.MODE === 'live' && !Store.getToken()
-            ? `<button class="btn btn--ghost btn--block" id="auth-token">⚙️ Указать GitHub-токен</button>`
-            : ''}
         </div>
       </div>`;
 
@@ -85,8 +82,6 @@ const Views = (() => {
 
     el.querySelector('#auth-submit').addEventListener('click', run);
     el.querySelector('#auth-pass').addEventListener('keydown', (e) => e.key === 'Enter' && run());
-    const tok = el.querySelector('#auth-token');
-    if (tok) tok.addEventListener('click', () => App.showView('settings'));
   };
 
   /* ─────────────── ГЛАВНЫЙ ЭКРАН (лента) ─────────────── */
@@ -405,30 +400,18 @@ const Views = (() => {
 
   /* ─────────────── НАСТРОЙКИ / ТОКЕН ─────────────── */
   const settings = (el) => {
-    const hasToken = !!Store.getToken();
     el.innerHTML = `
       <button class="back-btn" id="set-back">${UI.icon('back')}<span>Назад</span></button>
       <div class="section-title"><h1>Настройки</h1></div>
       <div class="settings-card">
         ${CONFIG.MODE === 'live' ? `
           <div class="setting">
-            <div class="setting-head">
-              <div class="setting-title">GitHub Personal Access Token</div>
-              <div class="setting-sub">Нужен для публикации видео и записи database.json. Хранится локально.</div>
-            </div>
-            <input id="token-input" type="password" placeholder="${hasToken ? 'Токен уже сохранён (скрыт)' : 'Вставь токен…'}" autocomplete="off" />
-            <div class="setting-actions">
-              <button class="btn btn--primary" id="token-save">Сохранить токен</button>
-              ${hasToken ? '<button class="btn btn--danger" id="token-clear">Удалить</button>' : ''}
-            </div>
-          </div>
-          <div class="setting">
-            <div class="setting-title">Репозиторий</div>
-            <div class="setting-sub">${CONFIG.OWNER}/${CONFIG.REPO} · ветка ${CONFIG.BRANCH}</div>
+            <div class="setting-title">Бэкенд</div>
+            <div class="setting-sub">Подключён GitHub-репозиторий ${CONFIG.OWNER}/${CONFIG.REPO} · ветка ${CONFIG.BRANCH}. Токен вшит в сборку.</div>
           </div>` : `
           <div class="setting">
             <div class="setting-title">Демо-режим</div>
-            <div class="setting-sub">Бэкенд отключён. Данные и видео хранятся только в этом браузере. Для реального бэкенда переключи MODE на 'live' в js/config.js.</div>
+            <div class="setting-sub">Бэкенд отключён. Данные и видео хранятся только в этом браузере.</div>
           </div>`}
         <div class="setting setting--logout">
           <button class="btn btn--ghost btn--block" id="logout-btn">${UI.icon('logout')}<span>Выйти из аккаунта</span></button>
@@ -438,20 +421,6 @@ const Views = (() => {
     el.querySelector('#set-back').addEventListener('click', () =>
       Store.isLoggedIn() ? App.goBack() : App.openAuth());
 
-    el.querySelector('#token-save')?.addEventListener('click', () => {
-      const val = el.querySelector('#token-input').value.trim();
-      if (!val) { UI.toast('Вставь токен', 'error'); return; }
-      Store.setToken(val);
-      UI.toast('Токен сохранён ✓');
-      App.showView('settings');
-    });
-    el.querySelector('#token-clear')?.addEventListener('click', async () => {
-      if (await UI.confirm('Удалить токен?', 'Публикация видео перестанет работать до нового ввода.')) {
-        Store.setToken('');
-        UI.toast('Токен удалён');
-        App.showView('settings');
-      }
-    });
     el.querySelector('#logout-btn').addEventListener('click', async () => {
       if (await UI.confirm('Выйти?', 'Придётся снова вводить ник и пароль.')) {
         Store.logout();
