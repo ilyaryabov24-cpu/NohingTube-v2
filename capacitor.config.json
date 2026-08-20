@@ -1,0 +1,13 @@
+{
+  "appId": "com.nothingtube.app",
+  "appName": "NothingTube",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "backgroundColor": "#000000"
+  }
+}
